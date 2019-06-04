@@ -22,6 +22,8 @@ import com.iplanet.sso.SSOException;
 import com.sun.identity.idm.AMIdentity;
 import com.sun.identity.idm.IdRepoException;
 import com.sun.identity.shared.debug.Debug;
+
+import org.apache.commons.lang.StringUtils;
 import org.forgerock.openam.annotations.sm.Attribute;
 import org.forgerock.openam.auth.node.api.*;
 import org.forgerock.openam.core.CoreWrapper;
@@ -136,8 +138,18 @@ public class ParseCookieAuthNode extends SingleOutcomeNode {
                     switch ( i ) {
                         case 0:
                             String key0 = "eidPseudonym";
-                            debugmessage("[" + DEBUG_FILE + "]: Adding key '" + key0 + "' with value '" + ssvalues[i] + "' ( index was '" + i + "') to shared state.");
-                            context.sharedState.put(key0, ssvalues[i]);
+                            // It is possible that the restrictedId/eidPseudonym contains characters which are not allowed as AM Username
+                            if (StringUtils.containsAny(ssvalues[i], "\\/+;,%[]|?"))
+                            {
+                            	debugmessage("[" + DEBUG_FILE + "]: eidPseudonym contains a special character '\\,/,+,;,,,%,[,],|,?'. Replace everyone with a '-'");
+                            	String decodedid =  ssvalues[i].replaceAll("\\\\|;|\\;|/|\\+|,|%|\\]|\\[|\\?|\\|", "-");
+	                            debugmessage("[" + DEBUG_FILE + "]: Adding key '" + key0 + "' with value '" + decodedid + "' ( index was '" + i + "') to shared state.");
+                            	context.sharedState.put(key0, decodedid);
+                            } else
+                            {
+	                            debugmessage("[" + DEBUG_FILE + "]: Adding key '" + key0 + "' with value '" + ssvalues[i] + "' ( index was '" + i + "') to shared state.");
+	                            context.sharedState.put(key0, ssvalues[i]);
+                            }
                             break;
                         case 1:
                             String key1 = "eidGivenname";
@@ -169,6 +181,16 @@ public class ParseCookieAuthNode extends SingleOutcomeNode {
                             debugmessage("[" + DEBUG_FILE + "]: Adding key '" + key6 + "' with value '" + ssvalues[i] + "' ( index was '" + i + "') to shared state.");
                             context.sharedState.put(key6, ssvalues[i]);
                             break;
+                        case 7:
+                        	String key7 = "eidCountry";
+                            debugmessage("[" + DEBUG_FILE + "]: Adding key '" + key7 + "' with value '" + ssvalues[i] + "' ( index was '" + i + "') to shared state.");
+                            context.sharedState.put(key7, ssvalues[i]);
+                            break;
+                        default:
+                            debugmessage("[" + DEBUG_FILE + "]: No case defined for '" + ssvalues[i] + "' ( index was '" + i + "') to shared state.");
+
+                            
+                        	
                     }
                 }
 
