@@ -15,18 +15,25 @@
 -->
 # ParseCookieAuthNode
 
-A simple authentication node for ForgeRock's [Identity Platform][forgerock_platform] 5.5 and above. This node... **SHORT DESCRIPTION HERE**
+A simple authentication node for ForgeRock's [Identity Platform][forgerock_platform] 5.5 and above.
 
+This node extracts values from the (decrypted) content of the configured cookie, which is set be the eIDWebservices App to be used by an (external) nPA authentication flow.
 
 Copy the .jar file from the ../target directory into the ../web-container/webapps/openam/WEB-INF/lib directory where AM is deployed.  Restart the web container to pick up the new node.  The node will then appear in the authentication trees components palette.
 
 
 **USAGE HERE**
 
+Use this node as first node of the service (=tree) called by the eIDWebsewrvices App to store data from an eID authentication 
+into shared-state variable which can be used to authticate (or create) users and to promote this data to an SP or RP. 
 
 The code in this repository has binary dependencies that live in the ForgeRock maven repository. Maven can be configured to authenticate to this repository by following the following [ForgeRock Knowledge Base Article](https://backstage.forgerock.com/knowledge/kb/article/a74096897).
 
+
 **SPECIFIC BUILD INSTRUCTIONS HERE**
+
+This node highly depends on the data provided by the eIDWebservices App.
+
 
 **SCREENSHOTS ARE GOOD LIKE BELOW**
 
